@@ -1,0 +1,32 @@
+---
+- hosts: docker_hosts
+  become: yes
+  tasks:
+    - name: Docker login
+      docker_login:
+        username: haroonabdulrauf
+        password: *********
+
+    - name: Build an image and push it to a private repo
+      community.docker.docker_image:
+        build:
+          path: "/home/ubuntu"
+        name: docker.io/haroonabdulrauf/abc_tech
+        push: true
+        source: build
+      register: out
+
+    - debug:
+        var: out
+
+    - name: Start a container
+      community.docker.docker_container:
+        name: abctechnologies
+        image: haroonabdulrauf/abc_tech
+        state: started
+        ports:
+          - 8090:8080
+      register: out
+
+    - debug:
+        var: out
