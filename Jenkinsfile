@@ -31,7 +31,7 @@ pipeline {
         stage('Deployment') {
             steps {
                 echo 'Generating docker image and deploying on K8s cluster from Ansible playbook'
-                ansiblePlaybook credentialsId: 'jenkins-master', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/home/ubuntu/deploy_java_app.yml', vaultTmpPath: ''
+                ansiblePlaybook credentialsId: 'jenkins-key', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/home/ubuntu/deploy_java_app.yml', vaultTmpPath: ''
             }
         }
     }    
