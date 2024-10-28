@@ -1,0 +1,30 @@
+---
+- name: Deploy Java application to Docker and Kubernetes
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Clone Java application code from GitHub
+      ansible.builtin.git:
+        repo: "https://github.com/habdulr1/edureka_final_project.git"
+        dest: "/home/ubuntu/app"
+
+    - name: Log in to DockerHub
+      community.docker.docker_login:
+        username: "haroonabdulrauf"
+        password: "Haroon@161"
+
+    - name: Build Docker image for Java application with Tomcat
+      community.docker.docker_image:
+        build:
+          path: "/home/ubuntu/app"
+        name: docker.io/haroonabdulrauf/abc_tech
+        tag: "latest"
+        push: true
+        source: build
+      register: out
+
+    - name: Apply Kubernetes deployment
+      kubernetes.core.k8s:
+        state: present
+        src: "/home/ubuntu/deployment.yml"  # Path to the manifest file
+        kubeconfig: "/home/ubuntu/.kube/config"  # Update with correct path
